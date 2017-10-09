@@ -9,37 +9,29 @@ using NUnit.Framework;
 namespace LogAn.UnitTests
 {
 	[TestFixture]
-    public class LogAnalyzerTests
-    {
-		[Test]
-        public void IsValidLogFileName_BadExtension_ReturnsFalse()
+	public class LogAnalyzerTests
+	{
+		[TestCase("filewithgoodextension.slf")]
+		[TestCase("filewithgoodextension.SLF")]
+		public void IsValidLogFileName_ValidExtensions_ReturnsTrue(string file)
 		{
 			LogAnalyzer analyzer = new LogAnalyzer();
 
-			bool result = analyzer.IsValidLogFileName("filewithbadeextension.foo");
+			bool result = analyzer.IsValidLogFileName(file);
 
-			Assert.False(result);
+			Assert.True(result);
 		}
 
-		[Test]
-	    public void IsValidLogFileName_GoodExtensionLowecase_ReturnsTrue()
-	    {
-		    LogAnalyzer analyzer = new LogAnalyzer();
+		[TestCase("filewithgoodextension.slf", true)]
+		[TestCase("filewithgoodextension.SLF", true)]
+		[TestCase("filewithbadeextension.foo", false)]
+		public void IsValidLogFileName_VariousExtensions_ReturnsTrue(string file, bool expected)
+		{
+			LogAnalyzer analyzer = new LogAnalyzer();
 
-		    bool result = analyzer.IsValidLogFileName("filewithgoodextension.slf");
+			bool result = analyzer.IsValidLogFileName(file);
 
-			Assert.True(result);
-	    }
-
-
-		[Test]
-	    public void IsValidLogFileName_GoodExtensionUppercase_ReturnsTrue()
-	    {
-		    LogAnalyzer analyzer = new LogAnalyzer();
-
-		    bool result = analyzer.IsValidLogFileName("filewithgoodextension.SLF");
-
-			Assert.True(result);
-	    }
-    }
+			Assert.AreEqual(expected, result);
+		}
+	}
 }
